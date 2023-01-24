@@ -16,14 +16,15 @@ func NumberOfDigits(n int) int {
 	}
 }
 
-func spaces(n int) string {
-	return strings.Repeat(" ", n)
-}
-
+// Get an integer argument from the line arguments
 func GetIntArg(args []string, n int) int {
 	num, err := strconv.Atoi(args[n])
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "%s\n", err)
+		fmt.Fprintf(os.Stderr, "invalid number\n")
+		os.Exit(1)
+	}
+	if num < 0 {
+		fmt.Fprintf(os.Stderr, "the argument must be positive\n")
 		os.Exit(1)
 	}
 	return num
@@ -44,18 +45,45 @@ func ParseArgs(args []string) (dividend, divisor int) {
 	return dividend, divisor
 }
 
-func print(left int, right int, digits int, i int) {
-	t := ""
-	if right >= 0 {
-		t = fmt.Sprint(right)
-	}
-	fmt.Println(spaces(i-NumberOfDigits(left)+1), left, spaces(digits-i-1), "|", t)
-}
-
 type Step struct {
 	left  int
 	right int
 	i     int
+}
+
+func spaces(n int) string {
+	return strings.Repeat(" ", n)
+}
+
+// Print a step
+func (step *Step) PrintStep(digits int) {
+	right := ""
+	if step.right >= 0 {
+		right = fmt.Sprint(step.right)
+	}
+	fmt.Println(spaces(step.i-NumberOfDigits(step.left)+1), step.left, spaces(digits-step.i-1), "| ", right)
+}
+
+type Steps struct {
+	steps  []Step
+	digits int
+}
+
+// Add a step
+func (steps *Steps) AddStep(left int, right int, i int) {
+	steps.steps = append(steps.steps, Step{left, right, i})
+}
+
+// Set result
+func (steps *Steps) SetResult(result int) {
+	steps.steps[1].right = result
+}
+
+// Print steps
+func (steps *Steps) Print() {
+	for _, step := range steps.steps {
+		step.PrintStep(steps.digits)
+	}
 }
 
 func main() {
@@ -64,34 +92,30 @@ func main() {
 	digits := NumberOfDigits(dividend)
 	result := 0
 	num := 0
-	steps := make([]Step, 0)
+	steps := Steps{make([]Step, 0), digits}
 
-	steps = append(steps, Step{dividend, divisor, digits - 1})
+	steps.AddStep(dividend, divisor, digits-1)
 
 	for i, ch := range fmt.Sprint(dividend) {
 		n := int(ch - '0')
 		num = num*10 + n
 
 		if num >= divisor {
-			steps = append(steps, Step{num, -1, i})
+			steps.AddStep(num, -1, i)
 			d := 0
 			for num >= divisor {
 				num = num - divisor
 				d++
 			}
 			result = result*10 + d
-			steps = append(steps, Step{d * divisor, -1, i})
+			steps.AddStep(d*divisor, -1, i)
 		}
 	}
-	steps = append(steps, Step{num, -1, digits - 1})
-	steps[1].right = result
-
-	for _, step := range steps {
-		print(step.left, step.right, digits, step.i)
-	}
+	steps.AddStep(num, -1, digits-1)
+	steps.SetResult(result)
+	steps.Print()
 
 	fmt.Println()
 	fmt.Println("Result:", result)
 	fmt.Println("Remainder:", num)
-
 }
