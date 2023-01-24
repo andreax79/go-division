@@ -44,34 +44,51 @@ func ParseArgs(args []string) (dividend, divisor int) {
 	return dividend, divisor
 }
 
-func print(num int, digits int, i int) {
-	fmt.Println(spaces(i-NumberOfDigits(num)+1), num, spaces(digits-i-1), "|")
+func print(left int, right int, digits int, i int) {
+	t := ""
+	if right >= 0 {
+		t = fmt.Sprint(right)
+	}
+	fmt.Println(spaces(i-NumberOfDigits(left)+1), left, spaces(digits-i-1), "|", t)
+}
+
+type Step struct {
+	left  int
+	right int
+	i     int
 }
 
 func main() {
 	dividend, divisor := ParseArgs(os.Args)
-	fmt.Println("", dividend, " |", divisor)
 
 	digits := NumberOfDigits(dividend)
 	result := 0
 	num := 0
+	steps := make([]Step, 0)
+
+	steps = append(steps, Step{dividend, divisor, digits - 1})
+
 	for i, ch := range fmt.Sprint(dividend) {
 		n := int(ch - '0')
 		num = num*10 + n
 
 		if num >= divisor {
-			print(num, digits, i)
+			steps = append(steps, Step{num, -1, i})
 			d := 0
 			for num >= divisor {
 				num = num - divisor
 				d++
 			}
 			result = result*10 + d
-			print(d*divisor, digits, i)
+			steps = append(steps, Step{d * divisor, -1, i})
 		}
 	}
-	print(num, digits, digits-1)
-	fmt.Println(spaces(NumberOfDigits(dividend)-NumberOfDigits(num)), num, " |")
+	steps = append(steps, Step{num, -1, digits - 1})
+	steps[1].right = result
+
+	for _, step := range steps {
+		print(step.left, step.right, digits, step.i)
+	}
 
 	fmt.Println()
 	fmt.Println("Result:", result)
