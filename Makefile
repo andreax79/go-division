@@ -1,5 +1,4 @@
-BASENAME=`basename $$(pwd)`
-IMAGE_NAME=${BASENAME}
+IMAGE_NAME=division
 VERSION=`cat VERSION`
 OWNER=andreax79
 
@@ -25,9 +24,13 @@ image:
 		 --tag ${IMAGE_NAME}:${VERSION} \
 		 .
 push:
-	docker tag ${IMAGE_NAME}:${VERSION} ghcr.io/${OWNER}/${IMAGE_NAME}:${VERSION}
-	docker tag ${IMAGE_NAME}:${VERSION} ghcr.io/${OWNER}/${IMAGE_NAME}:latest
-	docker push ghcr.io/${OWNER}/${IMAGE_NAME}:${VERSION}
-	docker push ghcr.io/${OWNER}/${IMAGE_NAME}:latest
+	@docker tag ${IMAGE_NAME}:${VERSION} ghcr.io/${OWNER}/${IMAGE_NAME}:${VERSION}
+	@docker tag ${IMAGE_NAME}:${VERSION} ghcr.io/${OWNER}/${IMAGE_NAME}:latest
+	@docker push ghcr.io/${OWNER}/${IMAGE_NAME}:${VERSION}
+	@docker push ghcr.io/${OWNER}/${IMAGE_NAME}:latest
+	@docker tag ${IMAGE_NAME}:${VERSION} ${OWNER}/${IMAGE_NAME}:${VERSION}
+	@docker tag ${IMAGE_NAME}:${VERSION} ${OWNER}/${IMAGE_NAME}:latest
+	@docker push ${OWNER}/${IMAGE_NAME}:${VERSION}
+	@docker push ${OWNER}/${IMAGE_NAME}:latest
 
 all: build
