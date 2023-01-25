@@ -71,8 +71,8 @@ type Step struct {
 	step  int
 }
 
-// Print a step
-func (step *Step) PrintStep(division *Division) {
+// Format a step for printing
+func (step *Step) FormatStep(division *Division) string {
 	left := ""
 	right := ""
 	switch step.left {
@@ -97,11 +97,11 @@ func (step *Step) PrintStep(division *Division) {
 	default:
 		right = fmt.Sprintf(" %d", step.right)
 	}
-	fmt.Printf("%s|%s\n", left, right)
+	return fmt.Sprintf("%s|%s", left, right)
 }
 
 type Division struct {
-	steps          []Step
+	Steps          []Step
 	Dividend       int
 	Divisor        int
 	Result         int
@@ -113,7 +113,7 @@ type Division struct {
 // Create a new Division instance
 func NewDivision(dividend, divisor int) *Division {
 	division := new(Division)
-	division.steps = make([]Step, 0)
+	division.Steps = make([]Step, 0)
 	division.Dividend = dividend
 	division.Divisor = divisor
 	division.dividendDigits = NumberOfDigits(dividend)
@@ -152,25 +152,25 @@ func (division *Division) Calculate() {
 
 // Add a step
 func (division *Division) addStep(left int, right int, i int, step int) {
-	division.steps = append(division.steps, Step{left, right, i, step})
+	division.Steps = append(division.Steps, Step{left, right, i, step})
 }
 
 // Set result and reminder
 func (division *Division) setResult(result, remainder int) {
 	division.Result = result
 	division.Remainder = remainder
-	division.steps[1].right = separator
-	if len(division.steps) < 3 {
+	division.Steps[1].right = separator
+	if len(division.Steps) < 3 {
 		division.addStep(empty, result, division.dividendDigits-1, 1)
 	} else {
-		division.steps[2].right = result
+		division.Steps[2].right = result
 	}
 }
 
 // Print the division
 func (division *Division) Print() {
-	for _, step := range division.steps {
-		step.PrintStep(division)
+	for _, step := range division.Steps {
+		fmt.Println(step.FormatStep(division))
 	}
 	fmt.Printf("\n%d : %d = %d (%d)\n", division.Dividend, division.Divisor, division.Result, division.Remainder)
 }
