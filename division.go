@@ -208,12 +208,20 @@ func (division *Division) setResult(result, remainder int) {
 	}
 }
 
+// Format the division
+func (division *Division) String() string {
+	var sb strings.Builder
+	for _, step := range division.Steps {
+		sb.WriteString(step.FormatStep(division))
+		sb.WriteString("\n")
+	}
+	sb.WriteString(fmt.Sprintf("\n%d : %d = %d (%d)\n", division.Dividend, division.Divisor, division.Result, division.Remainder))
+	return sb.String()
+}
+
 // Print the division
 func (division *Division) Print() {
-	for _, step := range division.Steps {
-		fmt.Println(step.FormatStep(division))
-	}
-	fmt.Printf("\n%d : %d = %d (%d)\n", division.Dividend, division.Divisor, division.Result, division.Remainder)
+	fmt.Println(division)
 }
 
 func main() {
