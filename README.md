@@ -2,25 +2,25 @@
 
 Column Division in Go
 
-## Run with Docker
+### Use Docker
 
 ```console
-$ docker run -it --rm andreax79/division 3275 25
- 3275 | 25
+$ docker run -it --rm andreax79/division 3279 25
+ 3279 | 25
  25   |----
   ----| 131
   77  |
   75  |
    ---|
-   25 |
+   29 |
    25 |
     --|
-    0 |
+    4 |
 
-3275 : 25 = 131 (0)
+3279 : 25 = 131 (4)
 ```
 
-## Run with Go
+### Run from source
 
 ```console
 $ go run division.go 1024 8

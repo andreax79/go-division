@@ -2,9 +2,10 @@ IMAGE_NAME=division
 VERSION=`cat VERSION`
 OWNER=andreax79
 
-.PHONY: help build test image push all
+.PHONY: help build test format image push all
 
 help:
+	@echo "- make format       Format source code"
 	@echo "- make build        Build"
 	@echo "- make test         Run tests"
 	@echo "- make image        Build docker image"
@@ -13,10 +14,13 @@ help:
 .DEFAULT_GOAL := help
 
 build:
-	@go build -o division -ldflags "-X main.version=${VERSION}"
+	@go build -o division -ldflags "-X main.version=${VERSION}" ./cmd/division
 
 test:
-	@go test
+	@go test -v ./...
+
+format:
+	@go fmt ./...
 
 image:
 	@DOCKER_BUILDKIT=1 docker build \

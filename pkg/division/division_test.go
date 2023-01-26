@@ -1,4 +1,4 @@
-package main
+package division
 
 import (
 	"strings"
@@ -14,23 +14,6 @@ func TestNumberOfDigits(t *testing.T) {
 	}
 	if NumberOfDigits(0) != 1 {
 		t.Fail()
-	}
-}
-
-func TestGetIntArg(t *testing.T) {
-	args := []string{"test", "10", "20"}
-	GetIntArg(args, 1)
-	GetIntArg(args, 2)
-}
-
-func TestParseArgs(t *testing.T) {
-	args := []string{"test", "9876", "543"}
-	dividend, divisor := ParseArgs(args)
-	if dividend != 9876 {
-		t.Fatalf("dividend != 9876")
-	}
-	if divisor != 543 {
-		t.Fatalf("divisor != 543")
 	}
 }
 
@@ -51,6 +34,11 @@ func TestFormatStep(t *testing.T) {
 	checkDivision(3279, 250)
 	checkDivision(3279, 2500)
 	checkDivision(3279, 25000)
+	checkDivision(32798, 250)
+	checkDivision(327989, 11)
+	checkDivision(3279890, 7654)
+	checkDivision(32798901, 76543)
+	checkDivision(327989012, 765432)
 }
 
 func TestDivision(t *testing.T) {
@@ -70,4 +58,9 @@ func TestDivision(t *testing.T) {
 	checkDivision(3279, 250)
 	checkDivision(3279, 2500)
 	checkDivision(3279, 25000)
+	checkDivision(32798, 250)
+	checkDivision(327989, 11)
+	checkDivision(3279890, 7654)
+	checkDivision(32798901, 76543)
+	checkDivision(327989012, 765432)
 }

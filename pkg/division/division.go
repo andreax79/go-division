@@ -12,24 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package main
+package division
 
 import (
-	"flag"
 	"fmt"
 	"os"
-	"strconv"
 	"strings"
 )
-
-var version string
-
-const usage = `Usage:
-    division <DIVIDEND> <DIVISOR>
-
-Example:
-    division 3279 25
-`
 
 const empty = -1
 const separator = -2
@@ -63,46 +52,6 @@ func NumberOfDigits(n int) int {
 func error(format string, v ...interface{}) {
 	fmt.Fprintf(os.Stderr, "division: "+format+"\n", v...)
 	os.Exit(1)
-}
-
-// Get an integer argument from the line arguments
-func GetIntArg(args []string, n int) int {
-	num, err := strconv.Atoi(args[n])
-	if err != nil {
-		error("invalid number")
-	}
-	if num < 0 {
-		error("the argument must be positive")
-	}
-	return num
-}
-
-// Parse command line arguments
-func ParseArgs(args []string) (dividend, divisor int) {
-	flag.Usage = func() { fmt.Fprintf(os.Stderr, "%s\n", usage) }
-
-	var versionFlag bool
-	flag.BoolVar(&versionFlag, "version", false, "print the version")
-	flag.CommandLine.Parse(args[1:])
-	if versionFlag {
-		if version != "" {
-			fmt.Println("Version", version)
-		}
-		os.Exit(0)
-	}
-
-	if len(flag.Args()) != 2 {
-		fmt.Println(flag.Args(), len(flag.Args()))
-		flag.Usage()
-		os.Exit(2)
-	}
-
-	dividend = GetIntArg(flag.Args(), 0)
-	divisor = GetIntArg(flag.Args(), 1)
-	if divisor == 0 {
-		error("division by zero")
-	}
-	return dividend, divisor
 }
 
 type Step struct {
@@ -222,11 +171,4 @@ func (division *Division) String() string {
 // Print the division
 func (division *Division) Print() {
 	fmt.Println(division)
-}
-
-func main() {
-	dividend, divisor := ParseArgs(os.Args)
-	division := NewDivision(dividend, divisor)
-	division.Calculate()
-	division.Print()
 }

@@ -3,8 +3,8 @@ FROM golang:1.19.5-buster AS builder
 # Build the application
 WORKDIR /build
 COPY . .
-RUN go build -v -o /build/division -ldflags "-X main.version=$(cat VERSION)"
-RUN go test
+RUN go build -v -o division -ldflags "-X main.version=${VERSION}" ./cmd/division
+RUN go test ./...
 WORKDIR /dist
 RUN cp /build/division ./division
 
