@@ -39,6 +39,8 @@ func TestFormatStep(t *testing.T) {
 	checkDivision(3279890, 7654)
 	checkDivision(32798901, 76543)
 	checkDivision(327989012, 765432)
+	checkDivision(8080, 1)
+	checkDivision(8080, 2)
 }
 
 func TestDivision(t *testing.T) {
@@ -63,4 +65,6 @@ func TestDivision(t *testing.T) {
 	checkDivision(3279890, 7654)
 	checkDivision(32798901, 76543)
 	checkDivision(327989012, 765432)
+	checkDivision(8080, 1)
+	checkDivision(8080, 2)
 }

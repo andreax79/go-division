@@ -16,13 +16,13 @@ package division
 
 import (
 	"fmt"
-	"os"
 	"strings"
 )
 
 const empty = -1
 const separator = -2
 
+// Returns the largest of a or b
 func max(a, b int) int {
 	if a > b {
 		return a
@@ -48,12 +48,6 @@ func NumberOfDigits(n int) int {
 	}
 }
 
-// Print error and exit
-func error(format string, v ...interface{}) {
-	fmt.Fprintf(os.Stderr, "division: "+format+"\n", v...)
-	os.Exit(1)
-}
-
 type Step struct {
 	left  int
 	right int
@@ -63,8 +57,8 @@ type Step struct {
 
 // Format a step for printing
 func (step *Step) FormatStep(division *Division) string {
+	// Left part
 	left := ""
-	right := ""
 	switch step.left {
 	case empty:
 		left = spaces(division.dividendDigits + 2)
@@ -78,6 +72,8 @@ func (step *Step) FormatStep(division *Division) string {
 		postSpaces := spaces(division.dividendDigits - step.i)
 		left = fmt.Sprintf("%s%d%s", preSpaces, step.left, postSpaces)
 	}
+	// Right part
+	right := ""
 	switch step.right {
 	case empty:
 		right = ""
@@ -87,7 +83,7 @@ func (step *Step) FormatStep(division *Division) string {
 	default:
 		right = fmt.Sprintf(" %d", step.right)
 	}
-	return fmt.Sprintf("%s|%s", left, right)
+	return left + "|" + right
 }
 
 type Division struct {
@@ -121,20 +117,21 @@ func (division *Division) Calculate() {
 		n := int(ch - '0')
 		remainder = remainder*10 + n
 
+		d := 0
 		if remainder >= division.Divisor {
 			if step > 0 {
 				division.addStep(remainder, empty, i, step)
 			}
-			d := 0
 			for remainder >= division.Divisor {
 				remainder = remainder - division.Divisor
 				d++
 			}
-			result = result*10 + d
-			division.addStep(d*division.Divisor, empty, i, step)
-			division.addStep(separator, empty, i, step)
-			step++
 		}
+
+		result = result*10 + d
+		division.addStep(d*division.Divisor, empty, i, step)
+		division.addStep(separator, empty, i, step)
+		step++
 	}
 	division.addStep(remainder, empty, division.dividendDigits-1, step)
 	division.setResult(result, remainder)
