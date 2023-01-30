@@ -8,6 +8,7 @@ help:
 	@echo "- make format       Format source code"
 	@echo "- make build        Build"
 	@echo "- make test         Run tests"
+	@echo "- make tag          Add version tag"
 	@echo "- make image        Build docker image"
 	@echo "- make push         Push docker image"
 
@@ -22,11 +23,15 @@ test:
 format:
 	@go fmt ./...
 
+tag:
+	@git tag -a "v$$(cat VERSION)" -m "version v$$(cat VERSION)"
+
 image:
 	@DOCKER_BUILDKIT=1 docker build \
 		 --tag ${IMAGE_NAME}:latest \
 		 --tag ${IMAGE_NAME}:${VERSION} \
 		 .
+
 push:
 	@docker tag ${IMAGE_NAME}:${VERSION} ghcr.io/${OWNER}/${IMAGE_NAME}:${VERSION}
 	@docker tag ${IMAGE_NAME}:${VERSION} ghcr.io/${OWNER}/${IMAGE_NAME}:latest

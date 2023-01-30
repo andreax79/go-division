@@ -1,5 +1,7 @@
 # go-division
 
+[![Go Report Card](https://goreportcard.com/badge/github.com/andreax79/go-division)](https://goreportcard.com/report/github.com/andreax79/go-division)
+
 Column Division in Go
 
 ### Use Docker
